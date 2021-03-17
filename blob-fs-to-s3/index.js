@@ -27,8 +27,8 @@ function getBlobIdFromPath(file) {
 }
 
 async function getBlobMetadata(blobPath) {
-  const x = await fs.promises.readFile(blobPath + '.properties');
-  const props = await properties.parse(x.toString());
+  const propsString = await fs.promises.readFile(blobPath + '.properties');
+  const props = await properties.parse(propsString.toString());
 
   delete props.size;
   if (props['custom.data'] === 'null')
@@ -98,15 +98,15 @@ async function main() {
   AWS.config.update({ region: awsRegion });
   const s3 = new AWS.S3();
 
-  const x = (await getFiles(blobDir)).map(f => f.slice(0, -5));
+  const blobs = (await getFiles(blobDir)).map(f => f.slice(0, -5));
 
   const progressBar = new ProgressBar('Uploading: :blob [:bar] :current/:total eta: :etas', {
     width: 40,
     incomplete: ' ',
-    total: x.length
+    total: blobs.length
   })
 
-  for (const f of x) {
+  for (const f of blobs) {
     try {
       await uploadToS3(s3, f, bucketName);
       progressBar.tick({ blob: getBlobIdFromPath(f) })
