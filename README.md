@@ -8,7 +8,6 @@ Procedura:
 - riaccendere puntando S3
 
 ``` bash
-yarn
-yarn blob-to-s3
+docker run -it mitto98/md-scripts blob-to-s3
 # segui i comandi su schermo
 ```
