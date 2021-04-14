@@ -35,6 +35,10 @@ async function getBlobMetadata(blobPath) {
     if (props['custom.data'] === 'null')
       delete props['custom.data']
 
+    if(props['filename']!=null){
+      props['filename']=encodeURI(props['filename']);
+    }
+
     return props;
   } catch (e) {
     if (e.code === 'ENOENT') {
