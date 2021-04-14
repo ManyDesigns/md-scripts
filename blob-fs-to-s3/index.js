@@ -88,7 +88,7 @@ async function main() {
     bucketName = await ask(`Bucket name\t\t: `);
 
   while (!blobDir || !fs.existsSync(blobDir)) {
-    blobDir = await ask(`Blob dir\t\t: `);
+    blobDir = await ask(`Blob dir [/blobs]\t: `) || '/blobs';
     if (!fs.existsSync(blobDir))
       console.log(`Il percorso ${blobDir} non esiste`);
   }
