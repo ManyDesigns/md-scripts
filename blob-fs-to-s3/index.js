@@ -27,14 +27,22 @@ function getBlobIdFromPath(file) {
 }
 
 async function getBlobMetadata(blobPath) {
-  const propsString = await fs.promises.readFile(blobPath + '.properties');
-  const props = await properties.parse(propsString.toString());
+  try {
+    const propsString = await fs.promises.readFile(blobPath + '.properties');
+    const props = await properties.parse(propsString.toString());
 
-  delete props.size;
-  if (props['custom.data'] === 'null')
-    delete props['custom.data']
+    delete props.size;
+    if (props['custom.data'] === 'null')
+      delete props['custom.data']
 
-  return props;
+    return props;
+  } catch (e) {
+    if (e.code === 'ENOENT') {
+      console.log(`Blob ${blobPath} has no proprties file`);
+      return {};
+    }
+    throw e;
+  }
 }
 
 async function getFiles(dir) {
